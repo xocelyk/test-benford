@@ -2,6 +2,7 @@ import streamlit as st
 import math
 
 st.title('Is your dataset Benford?')
+st.write('Upload a data file and choose a column to analyze. We\'ll do a chi-square test to see if the data follows Benford\'s Law.')
 
 BENFORD = [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]
 def get_first_digit(num, idx=0):
@@ -39,7 +40,7 @@ uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=Fals
 if uploaded_file is not None:
     bytes_data = str(uploaded_file.read(), 'utf-8')
     row_data = []
-    data = bytes_data[1:].split('\n')
+    data = bytes_data[:].split('\n')
     for line in data:
 	    row_data.append(line.split(','))
 
@@ -64,9 +65,10 @@ if uploaded_file is not None:
     total_entries = sum(digits_dict.values())
     try:
         expected_counts = get_expected_counts(total_entries)
-        st.write(chi_square_test(digits_dict.values(), expected_counts))
-
-        st.subheader('Your results')
+        res = chi_square_test(digits_dict.values(), expected_counts)
+        if res:
+          st.write(res)
+        st.subheader('Results vs Expected')
         st.bar_chart(digits_dict.values())
         st.subheader('Expected results')
         st.bar_chart(expected_counts)
