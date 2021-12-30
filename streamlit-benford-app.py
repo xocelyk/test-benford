@@ -14,8 +14,6 @@ def get_first_digit(num, idx=0):
     else:
         return get_first_digit(num, idx+1)
 
-
-
 def chi_square_test(data_count, expected_counts):
   """Return boolean on chi-square test (8 DOF & P-val=0.05)."""
   chi_square_stat = 0; # chi-square test statistic
@@ -30,10 +28,10 @@ def chi_square_test(data_count, expected_counts):
   else:
     st.write("Chi-square test failed")
 
-
 def get_expected_counts(total_count):
   """Return a list of expected Benford's law counts for a total sample count."""
   return [round(p * total_count/ 100) for p in BENFORD]
+
 
 uploaded_file = None
 uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False)
@@ -43,9 +41,7 @@ if uploaded_file is not None:
     data = bytes_data[:].split('\n')
     for line in data:
 	    row_data.append(line.split(','))
-
     col_names = row_data[0]
-
     col = st.radio('Select a column', col_names)
     col_idx = row_data[0].index(col)
     col_data = []
