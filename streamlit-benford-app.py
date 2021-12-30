@@ -14,6 +14,8 @@ def get_first_digit(num, idx=0):
     else:
         return get_first_digit(num, idx+1)
 
+
+
 def chi_square_test(data_count, expected_counts):
   """Return boolean on chi-square test (8 DOF & P-val=0.05)."""
   chi_square_stat = 0; # chi-square test statistic
@@ -24,14 +26,14 @@ def chi_square_test(data_count, expected_counts):
   st.write("\nChi Squared Test Statistic = {:.3f}".format(chi_square_stat))
   st.write("Critical value at P-value of 0.05 is 15.51")
   if chi_square_stat < 15.51:
-    st.write("Chi-square test passed")
+    st.write("Chi-square test PASSED")
   else:
-    st.write("Chi-square test failed")
+    st.write("Chi-square test FAILED")
+
 
 def get_expected_counts(total_count):
   """Return a list of expected Benford's law counts for a total sample count."""
   return [round(p * total_count/ 100) for p in BENFORD]
-
 
 uploaded_file = None
 uploaded_file = st.file_uploader("Choose a CSV file", accept_multiple_files=False)
@@ -41,7 +43,9 @@ if uploaded_file is not None:
     data = bytes_data[:].split('\n')
     for line in data:
 	    row_data.append(line.split(','))
+
     col_names = row_data[0]
+
     col = st.radio('Select a column', col_names)
     col_idx = row_data[0].index(col)
     col_data = []
@@ -62,14 +66,16 @@ if uploaded_file is not None:
     try:
         expected_counts = get_expected_counts(total_entries)
         res = chi_square_test(digits_dict.values(), expected_counts)
-        if res:
-          st.write(res)
-        st.subheader('Results vs Expected')
-        st.bar_chart(digits_dict.values())
-        st.subheader('Expected results')
-        st.bar_chart(expected_counts)
     except:
         st.write('Insufficient data to run test')
+    
+    if True:
+      if res:
+        st.write(res)
+      st.subheader('First digit distribution of your data')
+      st.bar_chart([0] + list(digits_dict.values()))
+      st.subheader('Expected Benford distribution')
+      st.bar_chart([0] + expected_counts)
 
 
 
